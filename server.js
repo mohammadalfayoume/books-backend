@@ -23,10 +23,10 @@ mongoose.connect(process.env.MONGOOSE, {
 
 app.get("/", homeHandler);
 app.get("/test", testHandler);
-app.get("/getBooks", handlers.getBooksHandler);
+app.get("/getUserBooks/:email", handlers.getUserBooksHandler);
 app.post("/addBooks", handlers.addBooksHandler)
-app.delete("/deleteBooks/:id",handlers.deleteBooksHandler)
-app.put("/updateBooks/:id", handlers.updateBooksHandler)
+app.delete("/deleteBooks/:id/:email",handlers.deleteBooksHandler)
+app.put("/updateBooks/:id/:email", handlers.updateBooksHandler)
 app.get("*", defaultHandler);
 
 

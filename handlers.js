@@ -1,9 +1,22 @@
 "use strict";
 const modelSchema = require("./bookModel");
 
-// http://localhost:3001/getBooks
-function getBooksHandler(req, res) {
-  modelSchema.BookModel.find({}, (err, result) => {
+// // http://localhost:3001/getAllBooks
+// function getAllBooksHandler(req, res) {
+//   modelSchema.BookModel.find({}, (err, result) => {
+//     if (err) {
+//       console.log(err);
+//     } else {
+//       res.status(200).send(result);
+//     }
+//   });
+// }
+
+
+// http://localhost:3001/getUserBooks
+function getUserBooksHandler(req, res) {
+  const {email}= req.params
+  modelSchema.BookModel.find({email}, (err, result) => {
     if (err) {
       console.log(err);
     } else {
@@ -14,15 +27,16 @@ function getBooksHandler(req, res) {
 
 // http://localhost:3001/addBooks
 async function addBooksHandler(req, res) {
-  const { title, description, status, image } = req.body; //Destructuring assignment
+  const { title, description, status, image,email } = req.body; //Destructuring assignment
   await modelSchema.BookModel.create({
     title: title,
     description: description,
     status: status,
     image: image,
+    email: email
   });
 
-  modelSchema.BookModel.find({}, (err, result) => {
+  modelSchema.BookModel.find({email}, (err, result) => {
     if (err) {
       console.log(err);
     } else {
@@ -33,9 +47,9 @@ async function addBooksHandler(req, res) {
 }
 
 function deleteBooksHandler(req, res) {
-  const { id } = req.params;
-  modelSchema.BookModel.deleteOne({ _id: id }, (err, result) => {
-    modelSchema.BookModel.find({}, (err, result) => {
+  const { id,email } = req.params;
+  modelSchema.BookModel.deleteOne({ _id: id,email }, (err, result) => {
+    modelSchema.BookModel.find({email}, (err, result) => {
       if (err) {
         console.log(err);
       } else {
@@ -46,13 +60,13 @@ function deleteBooksHandler(req, res) {
 }
 
 function updateBooksHandler(req, res) {
-  const { id } = req.params;
+  const { id,email } = req.params;
   const { title, description, status, image } = req.body;
   modelSchema.BookModel.findByIdAndUpdate(
-    { _id: id },
+    { _id: id,email },
     { title, description, status, image },
     (err, result) => {
-      modelSchema.BookModel.find({}, (err, result) => {
+      modelSchema.BookModel.find({email}, (err, result) => {
         if (err) {
           console.log(err);
         } else {
@@ -64,7 +78,7 @@ function updateBooksHandler(req, res) {
   );
 }
 module.exports = {
-  getBooksHandler,
+  getUserBooksHandler,
   addBooksHandler,
   deleteBooksHandler,
   updateBooksHandler,
